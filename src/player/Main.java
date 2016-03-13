@@ -40,7 +40,6 @@ class mainFrame extends JFrame implements ActionListener{
 	Menu File;
 	MenuItem open, play;
 	
-	JPanel p;
 	JFileChooser fc;
 	
 	TextArea upText, downText;
@@ -53,7 +52,6 @@ class mainFrame extends JFrame implements ActionListener{
 		File.add(open);
 		File.add(play);
 		
-		p = new JPanel();
 		fc = new JFileChooser();
 		fc.setCurrentDirectory(new File(filePath, "sample_abc"));
 		
@@ -62,16 +60,15 @@ class mainFrame extends JFrame implements ActionListener{
 		downText = new TextArea();
 		downText.setEditable(false);
 		
-		p.add(upText, BorderLayout.NORTH);
-		p.add(downText, BorderLayout.SOUTH);
+		this.add(upText, BorderLayout.PAGE_START);
+		this.add(downText, BorderLayout.CENTER);
 		
 		myMenuBar.add(File);
 		
 		this.setMenuBar(myMenuBar);
-		this.add(p);
 		
 		this.setTitle("ABC music player");
-		this.setSize(600, 500);
+		this.setSize(600, 700);
 		this.setLocation(300, 200);
 		this.setVisible(true);
 		
@@ -86,6 +83,29 @@ class mainFrame extends JFrame implements ActionListener{
 			
 			if (returnVal == JFileChooser.APPROVE_OPTION){
 				File file = fc.getSelectedFile();
+				
+				String line = null;
+				
+				try {
+					BufferedReader readText = new BufferedReader(new FileReader(file));
+					
+					StringBuilder sb = new StringBuilder();
+					try {
+						line = readText.readLine();
+						
+						while (line != null){
+							downText.setText(downText.getText()+ line + "\n");
+							line = readText.readLine();
+							
+						}
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				
 			}
 		}
 		
