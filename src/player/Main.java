@@ -11,6 +11,8 @@ import java.io.*;
 
 import sound.SequencePlayer;
 
+import sound.Lexer;
+
 /**
  * Main entry point of your application.
  */
@@ -96,8 +98,11 @@ class mainFrame extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==open){
 			ABCcontent = fileReader();
+//System.out.println(ABCcontent);
 			JOptionPane.showMessageDialog(null, "Sucessfully open");
-			info.setText(ABCcontent);
+			Lexer lexer = new Lexer (ABCcontent);
+			String display = lexer.run();
+			info.setText(display);
 		}
 
 		if (e.getSource()==play){
