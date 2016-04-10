@@ -101,7 +101,8 @@ class mainFrame extends JFrame implements ActionListener{
 //System.out.println(ABCcontent);
 			JOptionPane.showMessageDialog(null, "Sucessfully open");
 			Lexer lexer = new Lexer (ABCcontent);
-			String display = lexer.run();
+			//String display = lexer.getHeader();
+			String display = lexer.getBody();
 			info.setText(display);
 		}
 
