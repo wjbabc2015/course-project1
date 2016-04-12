@@ -6,12 +6,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.sound.midi.MidiUnavailableException;
 import javax.swing.*;
 import java.io.*;
 
 import sound.SequencePlayer;
 
 import sound.Lexer;
+import sound.Paser;
 
 /**
  * Main entry point of your application.
@@ -53,6 +55,8 @@ class mainFrame extends JFrame implements ActionListener{
 	JButton open, play;
 	
 	String ABCcontent;
+	
+	Paser paser;
 
 	private final String filePath = "../course-project1";
 	public mainFrame(){
@@ -102,12 +106,21 @@ class mainFrame extends JFrame implements ActionListener{
 			JOptionPane.showMessageDialog(null, "Sucessfully open");
 			Lexer lexer = new Lexer (ABCcontent);
 			//String display = lexer.getHeader();
-			String display = lexer.getBody();
-			info.setText(display);
+			String noteBody = lexer.getBody();
+			
+			paser = new Paser (noteBody, lexer.getHeader());			
+			info.setText(lexer.getHeader());
 		}
 
 		if (e.getSource()==play){
-			Main.play(null);
+			try {
+				SequencePlayer player = paser.translator();
+				
+				player.play();
+			} catch (MidiUnavailableException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 	
