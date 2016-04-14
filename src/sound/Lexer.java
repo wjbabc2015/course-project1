@@ -41,7 +41,9 @@ public class Lexer {
 		this.lexerString = piece;
 		run();
 	}
-
+	/**
+	 * Use regular expression to extract body and header from abc file separately 
+	**/
 	public void run() {
 		// System.out.println(lexerString);
 		pattern = Pattern.compile(abcRegex);
@@ -64,6 +66,9 @@ public class Lexer {
 		return body;
 	}
 
+	/**
+	 * Create for testing method
+	**/
 	public static void main(String args[]) {
 		String lex = "X:1\nT:Simple scale\n";
 		Lexer lexer = new Lexer(lex);
