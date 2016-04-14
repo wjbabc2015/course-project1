@@ -11,11 +11,11 @@ public class Paser {
 	String pitch;
 	String header;
 	
-	int tempo;
-	int TickPerQuarter;
+	int tempo; //beats Per Minute in SequencePlayer 
+	int TickPerQuarter; 
 	
 	//Map<String, Character> voice = new HashMap<String, Character>();
-	List voice = new ArrayList();
+	List voice = new ArrayList(); //List for storing note
 		
 	public Paser(String pitch, String header){
 		this.pitch = pitch;
@@ -26,6 +26,9 @@ public class Paser {
 		processBody();
 	}
 	
+	/**
+	 * Calculate the Tempo based on the parameter from header
+	 **/
 	public void calTempo(){
 		Pattern p = Pattern.compile(Lexer.fieldTempo);
 		Matcher m = p.matcher(header);
@@ -38,6 +41,10 @@ public class Paser {
 		}
 	}
 	
+	/**
+	 * Calculate the Tick per Quarter based on the parameter from header
+	 * Tick per Quarter = 1 / (4 * L)
+	 **/
 	public void calTick(){
 		Pattern p = Pattern.compile(Lexer.fieldDefaultLength);
 		Matcher m = p.matcher(header);
@@ -59,6 +66,9 @@ public class Paser {
 		return TickPerQuarter;
 	}
 */	
+	/**
+	 * Parse the note, and convert all notes to integer by using method in Pitch class
+	 **/
 	public void processBody(){
 		
 		//Remove white space from body part
@@ -70,8 +80,10 @@ public class Paser {
 			
 			if (Character.isLetter(t)){
 				
+				//Upper case letter denote to Middle note
 				if (Character.isUpperCase(t)){
 					voice.add(new Pitch(t).toMidiNote());
+				//Lower case letter donote to next higher octave
 				}else if (Character.isLowerCase(t)){
 					t = Character.toUpperCase(t);
 					voice.add(new Pitch(t).transpose(Pitch.OCTAVE).toMidiNote());	
@@ -80,11 +92,16 @@ public class Paser {
 		}
 	}
 	
+	/**
+	 * Return a sequence player instance for playing notes
+	 **/
 	public SequencePlayer translator() {
 		SequencePlayer sequenceplayer = null;
 		try {
+			//Initialize sequenceplayer
 			sequenceplayer = new SequencePlayer (tempo, TickPerQuarter);
 			
+			//Add all notes in the instance
 			for (int j = 0 ; j < voice.size(); j ++){
 				sequenceplayer.addNote((int) voice.get(j), j, j + 1);
 			}
