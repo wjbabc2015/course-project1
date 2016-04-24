@@ -1,77 +1,121 @@
 package sound;
 
+import java.util.*;
 import java.util.regex.*;
+
+import sound.Token.TokenType;
 
 public class Lexer {
 
 	String lexerString;
 	
 	//Header elements
-	public static final String fieldNnmber = "X:[0-9]*\\n";
-	public static final String fieldTitle = "T:.*\\n";
-	public static final String fieldComposer = "C:.*\\n";
-	public static final String fieldMeter = "M:[0-9]+/[0-9]+\\n";
-	public static final String fieldDefaultLength = "L:[0-9]+/[0-9]+\\n";
-	public static final String fieldTempo = "Q:[0-9]+\\n";
-	public static final String fieldKey = "K:[A-Ga-g]+\\n";
-	public static final String headerRegex = fieldNnmber + fieldTitle + fieldComposer + fieldMeter + fieldDefaultLength
-												+ fieldTempo + fieldKey;
+	public static final String fieldNnmber = "(X:[0-9]*\\n)";
+	public static final String fieldTitle = "(T:.*\\n)";
+	public static final String fieldComposer = "(C:.*\\n)";
+	public static final String fieldMeter = "(M:[0-9]+/[0-9]+\\n)";
+	public static final String fieldDefaultLength = "(L:[0-9]+/[0-9]+\\n)";
+	public static final String fieldTempo = "(Q:[0-9]+\\n)";
+	public static final String fieldKey = "(K:[A-Ga-g]+\\n)";
+	public static final String headerRegex = fieldNnmber + "|" + fieldTitle + "|" + fieldComposer + "|" + fieldMeter + "|" + fieldDefaultLength 
+												+ "|" + fieldTempo + "|" + fieldKey; // group 1 ~ 7
 	
 	//Body elements
-	public static final String basenote = "(C|D|E|F|G|A|B|c|d|e|f|g|a|b)";
-	public static final String accidental = "(\\^)+|(\\_)+";
-	public static final String octave = "(\\')+|(\\,)+";
-	public static final String note_length = "(\\d)*((\\/)?(\\d)*)";
-	public static final String barline = "(\\Q|:\\E)|(\\Q|\\E)|(\\Q||\\E)|(\\Q:|\\E)";
+	public static final String basenote = "[A-Ga-g]";
+	public static final String accidental = "__?|\\^\\^?|="; //group 10
+	public static final String octave = "['+,+]*";
+	public static final String note_length = "[0-9]*/[0-9]*|[0-9]+";  // group 11
+	public static final String barline = "(\\|\\]|\\|\\|?|\\[\\|\\s*)"; //group 12
 	
-	public static final String pitch = "(" + accidental + ")?(" + basenote
-            + ")(" + octave + ")?";
-	public static final String note = "(" + pitch +")(" + note_length + ")?";
-	public static final String element = "(" + note + ")|(\\s+)|("+ barline + ")";
+	public static final String pitch = "(" + accidental + ")?" + basenote + octave;
+	public static final String note = pitch + "(" + note_length + ")?"; //group 9 
+	public static final String element = "((" + note + ")\\s*)"+ "|" + barline; // group 8
 	
-	public static final String abcRegex = "("+ headerRegex + ")((" + element + ")+)";
+	public static final String abcRegex = headerRegex + "|" + element;
+	
+	//Regex for retrieving meter, and length
+	public static final String fieldMeterR = "M:([0-9]+/[0-9]+)\\n";
+	public static final String fieldDefaultLengthR = "L:([0-9]+/[0-9]+)\\n";
 	
 	Pattern pattern;
 	Matcher matcher;
 	
-	String header;
-	String body;
+	private static HashMap<Integer, TokenType> bodyMap;
+	
+	int index = 0;
+	
+	private static final TokenType[] tokenType = {
+		TokenType.INDEX_NUMBER,
+		TokenType.TITLE,
+		TokenType.COMPOSER_NAME,
+		TokenType.METER,
+		TokenType.NOTE_DURATION,
+		TokenType.TEMPO,
+		TokenType.KEY,
+		
+	};
+	
+	private void buildMacthMap(){
+		bodyMap = new HashMap<Integer, TokenType>();
+		bodyMap.put(9, TokenType.NOTE);
+		bodyMap.put(10, TokenType.ACCIDENTAL);
+		bodyMap.put(11, TokenType.NOTE_LENGTH);
+		bodyMap.put(12, TokenType.BARLINE);
+	}
 
 	public Lexer(String piece) {
 		this.lexerString = piece;
-		run();
+		pattern = Pattern.compile(abcRegex);
+//System.out.println(abcRegex);
+		matcher = pattern.matcher(lexerString);
+		buildMacthMap();
 	}
+
 	/**
 	 * Use regular expression to extract body and header from abc file separately 
 	**/
-	public void run() {
-		// System.out.println(lexerString);
-		pattern = Pattern.compile(abcRegex);
-		matcher = pattern.matcher(lexerString);
-		while (matcher.find()) {
-			//String r = matcher.group();
-			header = matcher.group(1);
-			body = matcher.group(2);
-			 //System.out.println(matcher.group(0));
-			 //System.out.println("Found Value 1: " + matcher.group(1));
-			 //System.out.println("Found Value 2: " + matcher.group(2));
-		}
-	}
-	
-	public String getHeader(){
-		return header;
-	}
-	
-	public String getBody(){
-		return body;
-	}
+	public Token run() throws IllegalArgumentException {
+		
+		if (!matcher.find(index))
+				return new Token ("", TokenType.END);
+		
+		String currentToken = matcher.group(0);
+		this.index = matcher.end();
+		
+		for (int i = 0; i < tokenType.length ; ++i){
+			if (matcher.group(i + 1) != null){
+				TokenType currentTokenName = tokenType[i];
+				currentToken = currentToken.replaceAll("[A-Z ]+:\\s*", "").replace("\n", "");
 
+//System.out.println(i + 1 + ": " + matcher.group(i + 1));	
+
+				return new Token(currentToken, currentTokenName);
+			}
+				
+		}
+		
+		for (int j : bodyMap.keySet()){
+			if (matcher.group(j) !=null){
+		
+//System.out.println(j + ": " + currentToken);
+			
+				return new Token(currentToken.trim(), bodyMap.get(j));
+			}
+		}
+		
+		throw new RuntimeException("Regex error!");
+	}
+	
 	/**
 	 * Create for testing method
 	**/
 	public static void main(String args[]) {
-		String lex = "X:1\nT:Simple scale\n";
+		String lex = "X:1\nC:Unknown\nT:Simple scale\nM:4/4\nL:1/8\nQ:120\nK:C\nC1/4 D E, F | G _A B c | c B A G F E D C |";
 		Lexer lexer = new Lexer(lex);
-		lexer.run();
+		//lexer.run();
+for (int i = 0; i <40; ++i ){
+		Token test = lexer.run();
+System.out.println(test.getTokenType() + ": " + test.getToken());
+}
 	}
 }

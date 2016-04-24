@@ -97,7 +97,9 @@ class mainFrame extends JFrame implements ActionListener{
 			}
 		});
 	}
-
+	/**
+	 * @param e button action
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource()==open){
@@ -105,11 +107,13 @@ class mainFrame extends JFrame implements ActionListener{
 //System.out.println(ABCcontent);
 			JOptionPane.showMessageDialog(null, "Sucessfully open");
 			Lexer lexer = new Lexer (ABCcontent);
-			//String display = lexer.getHeader();
-			String noteBody = lexer.getBody();
 			
-			paser = new Paser (noteBody, lexer.getHeader());			
-			info.setText(lexer.getHeader());
+			for (int i = 0; i <15 ; i ++)
+				lexer.run();
+
+			//paser = new Paser (noteBody, pieceHeader);			
+			//info.setText(pieceHeader);
+			//info.setText(noteBody);
 		}
 
 		if (e.getSource()==play){
@@ -123,7 +127,10 @@ class mainFrame extends JFrame implements ActionListener{
 			}
 		}
 	}
-	
+	/**
+	 * Process abc misic file
+	 * @return content a string type variable consists of header and body of piece
+	 */
 	private String fileReader(){
 		StringBuilder content = new StringBuilder();
 		FileReader fr = null;
