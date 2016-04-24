@@ -9,11 +9,9 @@ import java.awt.event.WindowEvent;
 import javax.sound.midi.MidiUnavailableException;
 import javax.swing.*;
 import java.io.*;
+import java.util.*;
 
-import sound.SequencePlayer;
-
-import sound.Lexer;
-import sound.Paser;
+import sound.*;
 
 /**
  * Main entry point of your application.
@@ -107,24 +105,16 @@ class mainFrame extends JFrame implements ActionListener{
 //System.out.println(ABCcontent);
 			JOptionPane.showMessageDialog(null, "Sucessfully open");
 			Lexer lexer = new Lexer (ABCcontent);
-			
-			for (int i = 0; i <15 ; i ++)
-				lexer.run();
-
+			Paser pas = new Paser (lexer);
+			Piece piece = new Piece (pas);
+			piece.pitchPrint();
 			//paser = new Paser (noteBody, pieceHeader);			
 			//info.setText(pieceHeader);
 			//info.setText(noteBody);
 		}
 
 		if (e.getSource()==play){
-			try {
-				SequencePlayer player = paser.translator();
-				
-				player.play();
-			} catch (MidiUnavailableException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			
 		}
 	}
 	/**

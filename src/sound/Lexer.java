@@ -33,9 +33,6 @@ public class Lexer {
 	
 	public static final String abcRegex = headerRegex + "|" + element;
 	
-	//Regex for retrieving meter, and length
-	public static final String fieldMeterR = "M:([0-9]+/[0-9]+)\\n";
-	public static final String fieldDefaultLengthR = "L:([0-9]+/[0-9]+)\\n";
 	
 	Pattern pattern;
 	Matcher matcher;
@@ -58,8 +55,8 @@ public class Lexer {
 	private void buildMacthMap(){
 		bodyMap = new HashMap<Integer, TokenType>();
 		bodyMap.put(9, TokenType.NOTE);
-		bodyMap.put(10, TokenType.ACCIDENTAL);
-		bodyMap.put(11, TokenType.NOTE_LENGTH);
+		//bodyMap.put(10, TokenType.ACCIDENTAL);
+		//bodyMap.put(11, TokenType.NOTE_LENGTH);
 		bodyMap.put(12, TokenType.BARLINE);
 	}
 
@@ -110,10 +107,10 @@ public class Lexer {
 	 * Create for testing method
 	**/
 	public static void main(String args[]) {
-		String lex = "X:1\nC:Unknown\nT:Simple scale\nM:4/4\nL:1/8\nQ:120\nK:C\nC1/4 D E, F | G _A B c | c B A G F E D C |";
+		String lex = "X:1\nC:Unknown\nT:Simple scale\nM:4/4\nL:1/8\nQ:120\nK:C\nA1/4 A/4 A/ A A2 A3 A4 A6 A8| A,1/4 A,/4 A,/ A, A,2 A,3 A,4 A,6 A,8 |]";
 		Lexer lexer = new Lexer(lex);
 		//lexer.run();
-for (int i = 0; i <40; ++i ){
+for (int i = 0; i <50; ++i ){
 		Token test = lexer.run();
 System.out.println(test.getTokenType() + ": " + test.getToken());
 }
