@@ -55,6 +55,8 @@ class mainFrame extends JFrame implements ActionListener{
 	String ABCcontent;
 	
 	Paser paser;
+	
+	SequencePlayer sequenceplay;
 
 	private final String filePath = "../course-project1";
 	public mainFrame(){
@@ -108,13 +110,19 @@ class mainFrame extends JFrame implements ActionListener{
 			Paser pas = new Paser (lexer);
 			Piece piece = new Piece (pas);
 			piece.pitchPrint();
+			sequenceplay = piece.play();
 			//paser = new Paser (noteBody, pieceHeader);			
 			//info.setText(pieceHeader);
 			//info.setText(noteBody);
 		}
 
 		if (e.getSource()==play){
-			
+			try {
+				sequenceplay.play();
+			} catch (MidiUnavailableException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 	/**

@@ -3,9 +3,6 @@ package sound;
 import java.util.*;
 import java.util.regex.*;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
-
 import sound.Token.TokenType;
 
 public class Paser {
@@ -13,7 +10,6 @@ public class Paser {
 	private final Lexer currentLex;
 	
 	int tempo; //beats Per Minute in SequencePlayer 
-	int TickPerQuarter;
 	int duration;
 	
 	int meterNumer;
@@ -41,7 +37,7 @@ public class Paser {
 	private void defaultInitalize (){
 		duration = 8;
 		meterNumer = meterDenom = 4;
-		TickPerQuarter = 100;
+		tempo = 100;
 	}
 	
 	public void parsing () {
@@ -76,7 +72,7 @@ public class Paser {
 			}break;
 			
 			case TEMPO: {
-				TickPerQuarter = Integer.parseInt(token.getToken());
+				tempo = Integer.parseInt(token.getToken());
 			}break;
 			
 			case NOTE: {
@@ -92,6 +88,8 @@ public class Paser {
 				Note pitch = new Note(note, octave, length);
 				voiceNote.add(pitch);
 			}break;
+			default:
+				break;
 			}
 		}
 	}
@@ -149,6 +147,14 @@ public class Paser {
 		}
 			
 		return length;	
+	}
+	
+	public int getTempo(){
+		return tempo;
+	}
+	
+	public int getDuration(){
+		return duration;
 	}
 	
 	public static void main(String[] args) {
