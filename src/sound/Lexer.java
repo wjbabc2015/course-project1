@@ -5,6 +5,10 @@ import java.util.regex.*;
 
 import sound.Token.TokenType;
 
+/**
+ * Lexer class
+ * Implementing idea came from a project in github
+ **/
 public class Lexer {
 
 	String lexerString;
@@ -41,6 +45,7 @@ public class Lexer {
 	
 	int index = 0;
 	
+	//Define an array for storing symbol of header, which has the same order with regular expression group
 	private static final TokenType[] tokenType = {
 		TokenType.INDEX_NUMBER,
 		TokenType.TITLE,
@@ -52,6 +57,10 @@ public class Lexer {
 		
 	};
 	
+	/**
+	 * Build a map for sorting body of piece
+	 * The method return a hashmap with index and token type
+	 **/
 	private void buildMacthMap(){
 		bodyMap = new HashMap<Integer, TokenType>();
 		bodyMap.put(9, TokenType.NOTE);
@@ -60,6 +69,11 @@ public class Lexer {
 		bodyMap.put(12, TokenType.BARLINE);
 	}
 
+	/**
+	 * Constructor for Lexer
+	 * @param piece string type for abc music piece
+	 * Initialize regular expression and hashmap for body of piece
+	 **/
 	public Lexer(String piece) {
 		this.lexerString = piece;
 		pattern = Pattern.compile(abcRegex);
@@ -70,6 +84,8 @@ public class Lexer {
 
 	/**
 	 * Use regular expression to extract body and header from abc file separately 
+	 * @throws IllegalArgumentException
+	 * @return Token, a defined class, where the token type and token name are stored
 	**/
 	public Token run() throws IllegalArgumentException {
 		
@@ -79,6 +95,7 @@ public class Lexer {
 		String currentToken = matcher.group(0);
 		this.index = matcher.end();
 		
+		//Scan group 1 ~ 7, and sort the header of piece
 		for (int i = 0; i < tokenType.length ; ++i){
 			if (matcher.group(i + 1) != null){
 				TokenType currentTokenName = tokenType[i];
@@ -91,6 +108,7 @@ public class Lexer {
 				
 		}
 		
+		//Scan group 9 and 12, and return Token with current token type and token name
 		for (int j : bodyMap.keySet()){
 			if (matcher.group(j) !=null){
 		

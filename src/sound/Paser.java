@@ -5,12 +5,17 @@ import java.util.regex.*;
 
 import sound.Token.TokenType;
 
+/**
+ * Parser for processing music staff
+ * @author jiabin
+ * Return all parameters used by sequencePlayer class, and music note
+ */
 public class Paser {
 	
 	private final Lexer currentLex;
 	
 	int tempo; //beats Per Minute in SequencePlayer 
-	int duration;
+	int duration; //The denominator of pitch length 
 	
 	int meterNumer;
 	int meterDenom;
@@ -23,7 +28,11 @@ public class Paser {
 	List<Integer> tickDuration = new ArrayList<Integer>(); //List for storing number of ticks
 	List<String> header;
 	
-	
+	/**
+	 * Constructor for Parser
+	 * @param lexer Lexer class, which is implemented to process regular expression
+	 * Initialize two array lists for note and header, parameters for sequence player, and parse token
+	 */
 		
 	public Paser(Lexer lexer){
 		this.currentLex = lexer;
@@ -34,12 +43,18 @@ public class Paser {
 		parsing();
 	}
 	
+	/**
+	 * Default parameter initialization
+	 */
 	private void defaultInitalize (){
 		duration = 8;
 		meterNumer = meterDenom = 4;
 		tempo = 100;
 	}
-	
+	/**
+	 * parse token
+	 * assign value to header, voiceNote array lists, tempo, duration, and meterNumer/meterDenom
+	 */
 	public void parsing () {
 		
 		for (Token token = this.currentLex.run(); token.getTokenType() != TokenType.END; token = this.currentLex.run()) {
@@ -94,6 +109,11 @@ public class Paser {
 		}
 	}
 	
+	/**
+	 * get note by using regular expression
+	 * @param str, string of words
+	 * @return note, character of A-G or a-g, not null
+	 */
 	private String getNote (String str){
 		
 		String note = "";
@@ -107,10 +127,19 @@ public class Paser {
 		return note;	
 	}
 	
+	/**
+	 * get voiceNote list
+	 * @return voiceNote, array list storing note, octave, and length
+	 */
 	public List<Note> getVoice (){	
 		return voiceNote;
 	}
 	
+	/**
+	 * get octave
+	 * @param str, string of words, which may contains octave
+	 * @return octave, either "`" or ",", which may be null
+	 */
 	private String getOctave (String str){
 		
 		String octave = "";
@@ -124,6 +153,11 @@ public class Paser {
 		return octave;	
 	}
 
+	/**
+	 * get duration of a note
+	 * @param str, string of words, which may contains a fraction 
+	 * @return length, string of words, which may be null, fraction, or integer
+	 */
 	private String getLength (String str){
 		
 		String length = "";

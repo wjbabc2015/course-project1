@@ -5,6 +5,11 @@ import java.util.*;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
+/**
+ * Create playable piece
+ * @author jiabin
+ * Return sequenceplayer note
+ */
 public class Piece {
 	
 	private final Paser parser;
@@ -19,6 +24,11 @@ public class Piece {
 	
 	private List<sequenceNote> sequenceNote;
 	
+	/**
+	 * Constructor for piece class
+	 * @param p, parser, which provides required parameters to piece class
+	 * Initialize all the variable
+	 */
 	public Piece (Paser p) {
 		this.parser = p;
 		voice = parser.getVoice();
@@ -30,6 +40,9 @@ public class Piece {
 		calNote();
 	}
 	
+	/**
+	 * Create for testing
+	 */
 	public void pitchPrint (){
 		for (int i = 0 ; i < voice.size() ; i ++){
 			Note test = voice.get(i); 
@@ -37,6 +50,10 @@ public class Piece {
 		}
 	}
 	
+	/**
+	 * calculate tick per quarter
+	 * assign value to ticksPerQuarterNote
+	 */
 	public void calTick (){
 		for (int i = 0; i<voice.size(); i ++){
 			Note note = voice.get(i);
@@ -49,6 +66,10 @@ public class Piece {
 		ticksPerQuarterNote = ticksPerQuarterNote * topLengthDenom;
 	}
 	
+	/**
+	 * process note
+	 * return arraylist sequenceNote 
+	 */
 	public void calNote(){
 		for (int j = 0; j < voice.size(); j ++){
 			Note note = voice.get(j);
@@ -89,6 +110,10 @@ System.out.println("Pitch: " + pitch + " Duration: " + duration);
 		}
 	}
 	
+	/**
+	 * Create playable sequenceplayer
+	 * @return sequenceplayer, senquencePlayer class, which can be played by MIDI
+	 */
 	public SequencePlayer play(){		
 		try {
 			sequenceplayer = new SequencePlayer (beatsPerMinute, ticksPerQuarterNote);
