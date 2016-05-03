@@ -57,6 +57,8 @@ class mainFrame extends JFrame implements ActionListener{
 	Paser paser;
 	
 	SequencePlayer sequenceplay;
+	
+	StringBuilder display;
 
 	private final String filePath = "../course-project1";
 	public mainFrame(){
@@ -111,9 +113,15 @@ class mainFrame extends JFrame implements ActionListener{
 			Piece piece = new Piece (pas);
 			piece.pitchPrint();
 			sequenceplay = piece.play();
+			
+			display = new StringBuilder();
+			
+			for (int d = 0; d<pas.getHeader().size(); d++){
+				display.append(pas.getHeader().get(d) + "\n");
+			}
 			//paser = new Paser (noteBody, pieceHeader);			
 			//info.setText(pieceHeader);
-			//info.setText(noteBody);
+			info.setText(display.toString());
 		}
 
 		if (e.getSource()==play){

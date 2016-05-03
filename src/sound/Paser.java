@@ -191,6 +191,10 @@ public class Paser {
 		return duration;
 	}
 	
+	public List<String> getHeader(){
+		return header;
+	}
+	
 	public static void main(String[] args) {
 
 	}
