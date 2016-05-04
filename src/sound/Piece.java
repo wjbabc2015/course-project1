@@ -25,7 +25,7 @@ public class Piece {
 	private List<sequenceNote> sequenceNote;
 	
 	/**
-	 * Constructor for piece class
+	 * Creator for piece class
 	 * @param p, parser, which provides required parameters to piece class
 	 * Initialize all the variable
 	 */

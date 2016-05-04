@@ -42,6 +42,11 @@ public class Main {
 	}
 }
 
+/**
+ * Create UI of music player
+ * @author jiabin
+ * Display simple window
+ */
 class mainFrame extends JFrame implements ActionListener{
 
 	JLabel title;
@@ -61,6 +66,10 @@ class mainFrame extends JFrame implements ActionListener{
 	StringBuilder display;
 
 	private final String filePath = "../course-project1";
+	
+	/**
+	 * Creator for main window of UI
+	 */
 	public mainFrame(){
 
 		p1 = new JPanel();
@@ -90,8 +99,13 @@ class mainFrame extends JFrame implements ActionListener{
 		this.add(info, BorderLayout.CENTER);
 		this.add(p2, BorderLayout.SOUTH);
 
+		//Button action monitor
 		open.addActionListener(this);
 		play.addActionListener(this);
+		
+		/**
+		 * Rewrite window listener
+		 */
 		this.addWindowListener(new WindowAdapter(){
 			@Override
 			public void windowClosing(WindowEvent arg0){
@@ -100,6 +114,7 @@ class mainFrame extends JFrame implements ActionListener{
 		});
 	}
 	/**
+	 * Implement button action
 	 * @param e button action
 	 */
 	@Override
@@ -134,8 +149,8 @@ class mainFrame extends JFrame implements ActionListener{
 		}
 	}
 	/**
-	 * Process abc misic file
-	 * @return content a string type variable consists of header and body of piece
+	 * Read abc misic file
+	 * @return content, string of words. 
 	 */
 	private String fileReader(){
 		StringBuilder content = new StringBuilder();

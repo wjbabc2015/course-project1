@@ -59,7 +59,7 @@ public class Lexer {
 	
 	/**
 	 * Build a map for sorting body of piece
-	 * The method return a hashmap with index and token type
+	 * Modify bodyMap by assigning value
 	 **/
 	private void buildMacthMap(){
 		bodyMap = new HashMap<Integer, TokenType>();
@@ -70,9 +70,8 @@ public class Lexer {
 	}
 
 	/**
-	 * Constructor for Lexer
-	 * @param piece string type for abc music piece
-	 * Initialize regular expression and hashmap for body of piece
+	 * Creator for Lexer
+	 * @param piece, String of words. requires not null
 	 **/
 	public Lexer(String piece) {
 		this.lexerString = piece;
@@ -83,12 +82,13 @@ public class Lexer {
 	}
 
 	/**
-	 * Use regular expression to extract body and header from abc file separately 
+	 * Extract token from piece 
 	 * @throws IllegalArgumentException
-	 * @return Token, a defined class, where the token type and token name are stored
+	 * @return Token, a defined class. where the token type and token name are stored
 	**/
 	public Token run() throws IllegalArgumentException {
 		
+		//return null
 		if (!matcher.find(index))
 				return new Token ("", TokenType.END);
 		

@@ -1,5 +1,10 @@
 package sound;
 
+/**
+ * Represents a single note.
+ * @author jiabin
+ * 
+ */
 public class Note {
 	
 	private final String note;
@@ -8,6 +13,12 @@ public class Note {
 	private int lengthNumer = 1;
 	private int lengthDenom = 1;
 	
+	/**
+	 * Creator for note
+	 * @param Note, string of words. requires not null
+	 * @param octave, string of words.
+	 * @param length, string of words.
+	 */
 	public Note (String Note, String octave, String length)
 	{
 		this.note = Note;
@@ -17,6 +28,9 @@ public class Note {
 		processLength();
 	}
 	
+	/**
+	 * Process the length of a note
+	 */
 	public void processLength(){
 		String regex = "/";
 		
@@ -31,18 +45,34 @@ public class Note {
 		}
 	}
 	
+	/**
+	 * Get note
+	 * @return note, string of words. requires not null
+	 */
 	public String getNote (){
 		return note;
 	}
 	
+	/**
+	 * Get octave
+	 * @return octave, string of words.
+	 */
 	public String getOctave (){
 		return octave;
 	}
 	
+	/**
+	 * Get the numerator of length
+	 * @return lengthNumer, integer. requires lengthNumer >= 1
+	 */
 	public int getLengthNumer (){
 		return lengthNumer;
 	}
 	
+	/**
+	 * Get the Denominator of length
+	 * @return lengthDenom, integer. requires lengthDenom >= 1
+	 */
 	public int getLengthDenom (){
 		return lengthDenom;
 	}

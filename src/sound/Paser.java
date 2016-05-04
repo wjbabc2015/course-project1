@@ -6,9 +6,8 @@ import java.util.regex.*;
 import sound.Token.TokenType;
 
 /**
- * Parser for processing music staff
+ * Interpret abc music staff
  * @author jiabin
- * Return all parameters used by sequencePlayer class, and music note
  */
 public class Paser {
 	
@@ -29,7 +28,7 @@ public class Paser {
 	List<String> header;
 	
 	/**
-	 * Constructor for Parser
+	 * Creator for Parser
 	 * @param lexer Lexer class, which is implemented to process regular expression
 	 * Initialize two array lists for note and header, parameters for sequence player, and parse token
 	 */
@@ -52,8 +51,9 @@ public class Paser {
 		tempo = 100;
 	}
 	/**
-	 * parse token
-	 * assign value to header, voiceNote array lists, tempo, duration, and meterNumer/meterDenom
+	 * Interpret token
+	 * Modify header, voiceNote, tempo, duration, and meterNumer/meterDenom.
+	 * requires header, tempo, duration, and meterNumer/meterDenom are not null
 	 */
 	public void parsing () {
 		
@@ -94,6 +94,8 @@ public class Paser {
 				String element = token.getToken();
 //System.out.println(element);
 				//String accidental = processNote(m);
+				
+				//retrieve note, octave, and length from token
 				String note = getNote (element);
 				String octave = getOctave (element);
 				String length = getLength (element);
